@@ -1,8 +1,7 @@
 import json
 import os
-from uuid import uuid4
 from http.server import HTTPServer, BaseHTTPRequestHandler
-
+from uuid import uuid4
 
 SERVER_ADDRESS = ('0.0.0.0', 8000)
 STATIC_PATH = 'static/'
@@ -14,12 +13,11 @@ MAX_FILE_SIZE = 1024 * 1024 * 5  # 5 MB
 class ImageHostingHTTPRequestHandler(BaseHTTPRequestHandler):
     server_version = 'Image Hosting Server v0.1'
 
+
+
     # handles all GET requests
     def do_GET(self):
-        if self.path == '/':
-           self.send_html('index.html')
-
-        elif (self.path.startswith('/images/') and
+        if (self.path.startswith('/images/') and
                 any(self.path.endswith(ext) for ext in ALLOWED_EXTENSIONS)):
             self.send_response(200)
             self.send_header('Content-type', 'image/jpeg')
