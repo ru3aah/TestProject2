@@ -12,7 +12,9 @@ services:
 
   nginx:
     image: nginx
+    restart: always
     container_name: nginx
+    command: nginx -g "daemon off;"
     ports:
       - "80:80"
     volumes:

@@ -13,8 +13,6 @@ MAX_FILE_SIZE = 1024 * 1024 * 5  # 5 MB
 class ImageHostingHTTPRequestHandler(BaseHTTPRequestHandler):
     server_version = 'Image Hosting Server v0.1'
 
-
-
     # handles all GET requests
     def do_GET(self):
         if (self.path.startswith('/images/') and
