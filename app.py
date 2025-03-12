@@ -1,17 +1,77 @@
+import json
+import os
+from uuid import uuid4
 from http.server import HTTPServer, BaseHTTPRequestHandler
 
-SERVER_ADDRESS = ('localhost', 8000)
+
+SERVER_ADDRESS = ('0.0.0.0', 8000)
+STATIC_PATH = 'static/'
+IMAGESTORE_PATH = 'images/'
+ALLOWED_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.gif']
+MAX_FILE_SIZE = 1024 * 1024 * 5  # 5 MB
 
 
 class ImageHostingHTTPRequestHandler(BaseHTTPRequestHandler):
-    #handls all GET requests
     server_version = 'Image Hosting Server v0.1'
 
+    # handles all GET requests
     def do_GET(self):
-        self.send_response(200)
+        if self.path == '/':
+           self.send_html('index.html')
+
+        elif (self.path.startswith('/images/') and
+                any(self.path.endswith(ext) for ext in ALLOWED_EXTENSIONS)):
+            self.send_response(200)
+            self.send_header('Content-type', 'image/jpeg')
+            self.end_headers()
+            filename = self.path.split('/')[-1]
+            with open(IMAGESTORE_PATH + filename, 'rb') as file:
+                self.wfile.write(file.read())
+        elif self.path == '/api/images':
+            self.send_response(200)
+            self.send_header('Content-type', 'application/json')
+            self.end_headers()
+            response = {
+                'images': next(os.walk(IMAGESTORE_PATH))[2]
+            }
+            self.wfile.write(json.dumps(response).encode('utf-8'))
+
+        elif self.path == '/images':
+            self.send_html('images.html')
+        elif self.path == '/upload':
+            self.send_html('upload.html')
+        else:
+            self.send_html('404.html', code=404)
+
+
+    def do_POST(self):
+        if self.path == '/upload':
+            file_size = int(self.headers.get('Content-Length'))
+            if file_size > MAX_FILE_SIZE:
+                self.send_html('file_too_large.html', code=413)
+                return
+
+            data = self.rfile.read(file_size)
+            _, file_ext = os.path.splitext(self.headers.get('Filename'))
+            image_id = uuid4()
+
+            if file_ext not in ALLOWED_EXTENSIONS:
+                self.send_html('invalid_file_type.html', code=400)
+                return
+
+            with open(IMAGESTORE_PATH + f'{image_id}{file_ext}', 'wb') as file:
+                file.write(data)
+            self.send_html('upload_success.html')
+        else:
+            self.send_html('404.html', code=404)
+
+
+    def send_html(self, file_path, code=200):
+        self.send_response(code)
         self.send_header('Content-type', 'text/html')
         self.end_headers()
-        self.wfile.write(b"<h1>Hello, world!</h1>")
+        with open(STATIC_PATH + file_path, 'rb') as file:
+            self.wfile.write(file.read())
 
 
 # noinspection PyTypeChecker
@@ -25,7 +85,6 @@ def run(server_class=HTTPServer, handler_class=ImageHostingHTTPRequestHandler):
         httpd.server_close()
     finally:
         print('Server has been shut down.')
-
 
 
 if __name__ == '__main__':
