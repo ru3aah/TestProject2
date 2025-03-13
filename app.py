@@ -15,15 +15,7 @@ class ImageHostingHTTPRequestHandler(BaseHTTPRequestHandler):
 
     # handles all GET requests
     def do_GET(self):
-        if (self.path.startswith('/images/') and
-                any(self.path.endswith(ext) for ext in ALLOWED_EXTENSIONS)):
-            self.send_response(200)
-            self.send_header('Content-type', 'image/jpeg')
-            self.end_headers()
-            filename = self.path.split('/')[-1]
-            with open(IMAGESTORE_PATH + filename, 'rb') as file:
-                self.wfile.write(file.read())
-        elif self.path == '/api/images':
+        if self.path == '/api/images':
             self.send_response(200)
             self.send_header('Content-type', 'application/json')
             self.end_headers()
