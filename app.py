@@ -12,7 +12,6 @@ MAX_FILE_SIZE = 1024 * 1024 * 5  # 5 MB
 
 class ImageHostingHTTPRequestHandler(BaseHTTPRequestHandler):
     server_version = 'Image Hosting Server v0.1'
-
     def __init__(self, request, client_address, server):
         self.get_routes = {
             '/api/images': self.get_images,
@@ -22,7 +21,6 @@ class ImageHostingHTTPRequestHandler(BaseHTTPRequestHandler):
             '/upload': self.post_upload,
         }
         self.default = lambda : self.send_html('404.html', code=404)
-
         super().__init__(request, client_address, server)
 
 
@@ -44,19 +42,19 @@ class ImageHostingHTTPRequestHandler(BaseHTTPRequestHandler):
         }
         self.wfile.write(json.dumps(response).encode('utf-8'))
 
+
     def get_upload(self):
         self.send_html('upload.html', code =200)
+
 
     def post_upload(self):
         file_size = int(self.headers.get('Content-Length'))
         if file_size > MAX_FILE_SIZE:
             self.send_html('file_too_large.html', code=413)
             return
-
         data = self.rfile.read(file_size)
         _, file_ext = os.path.splitext(self.headers.get('Filename'))
         image_id = uuid4()
-
         if file_ext not in ALLOWED_EXTENSIONS:
             self.send_html('invalid_file_type.html', code=400)
             return
