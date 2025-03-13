@@ -31,14 +31,8 @@ class ImageHostingHTTPRequestHandler(BaseHTTPRequestHandler):
                 'images': next(os.walk(IMAGESTORE_PATH))[2]
             }
             self.wfile.write(json.dumps(response).encode('utf-8'))
-
-        elif self.path == '/images':
-            self.send_html('images.html')
-        elif self.path == '/upload':
-            self.send_html('upload.html')
         else:
             self.send_html('404.html', code=404)
-
 
     def do_POST(self):
         if self.path == '/upload':
