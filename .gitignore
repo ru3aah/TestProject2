@@ -1,4 +1,7 @@
 .idea
+.venv
+logs
+images
 .venv1
 # Virtual environments
 .venv1/
