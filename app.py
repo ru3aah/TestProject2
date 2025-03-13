@@ -26,6 +26,7 @@ class ImageHostingHTTPRequestHandler(BaseHTTPRequestHandler):
         else:
             self.send_html('404.html', code=404)
 
+
     def do_POST(self):
         if self.path == '/upload':
             file_size = int(self.headers.get('Content-Length'))
