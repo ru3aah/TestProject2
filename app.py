@@ -32,17 +32,6 @@ class ImageHostingHTTPRequestHandler(BaseHTTPRequestHandler):
         super().__init__(request, client_address, server)
 
 
-    # handles all GET requests
-    def do_GET(self):
-        logger.info(f'GET {self.path}')
-        self.get_routes.get(self.path, self.default)()
-
-
-    def do_POST(self):
-        logger.info(f'POST {self.path}')
-        self.post_routes.get(self.path, self.default)()
-
-
     def get_images(self):
         self.send_response(200)
         self.send_header('Content-type', 'application/json')
@@ -81,6 +70,15 @@ class ImageHostingHTTPRequestHandler(BaseHTTPRequestHandler):
         self.end_headers()
         with open(STATIC_PATH + file_path, 'rb') as file:
             self.wfile.write(file.read())
+
+        # handles all GET requests
+        def do_GET(self):
+            logger.info(f'GET {self.path}')
+            self.get_routes.get(self.path, self.default)()
+
+        def do_POST(self):
+            logger.info(f'POST {self.path}')
+            self.post_routes.get(self.path, self.default)()
 
 
 # noinspection PyTypeChecker
