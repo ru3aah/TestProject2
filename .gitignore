@@ -1,7 +1,7 @@
 .idea
 .venv
 logs
-images
+/images
 .venv1
 # Virtual environments
 .venv1/

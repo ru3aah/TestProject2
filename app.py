@@ -83,7 +83,7 @@ class ImageHostingHTTPRequestHandler(BaseHTTPRequestHandler):
         file_size = int(self.headers.get('Content-Length'))
         if file_size > MAX_FILE_SIZE:
             logger.warning(f'file size err ')
-            self.send_html('file_too_large.html', code=413)
+            self.send_html('file_to_large.html', code=413)
             return
         data = self.rfile.read(file_size)
         _, file_ext = os.path.splitext(self.headers.get('Filename'))
