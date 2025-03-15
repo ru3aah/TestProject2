@@ -36,13 +36,10 @@ class ImageHostingHTTPRequestHandler(BaseHTTPRequestHandler):
         client_address: The address of the client.
         server: The server instance handling the request.
         """
-        self.get_routes = {
-            '/api/images': self.get_images
-        }
-        self.post_routes = {
-            '/upload': self.post_upload,
-        }
-        self.default = lambda : self.send_html('404.html', code=404)
+        self.get_routes = {'/api/images': self.get_images}
+        self.post_routes = {'/upload/': self.post_upload}
+        self.default_response = lambda : self.send_html('404.html',
+                                                        404)
         super().__init__(request, client_address, server)
 
 
@@ -56,9 +53,7 @@ class ImageHostingHTTPRequestHandler(BaseHTTPRequestHandler):
         self.send_response(200)
         self.send_header('Content-type', 'application/json')
         self.end_headers()
-        response = {
-            'images': next(os.walk(IMAGESTORE_PATH))[2]
-        }
+        response = {'images': next(os.walk(IMAGESTORE_PATH))[2]}
         self.wfile.write(json.dumps(response).encode('utf-8'))
 
 
@@ -73,21 +68,23 @@ class ImageHostingHTTPRequestHandler(BaseHTTPRequestHandler):
         file_size = int(self.headers.get('Content-Length'))
         if file_size > MAX_FILE_SIZE:
             logger.warning(f'file size err ')
-            self.send_html('file_to_large.html', code=413)
+            self.send_html('upload_failed.html', 413)
             return
         data = self.rfile.read(file_size)
         _, file_ext = os.path.splitext(self.headers.get('Filename'))
         image_id = uuid4()
         if file_ext not in ALLOWED_EXTENSIONS:
             logger.warning(f'wrong file extension')
-            self.send_html('invalid_file_type.html', code=400)
+            self.send_html('upload_failed.html', 400)
             return
+
         with open(IMAGESTORE_PATH + f'{image_id}{file_ext}', 'wb') as file:
             file.write(data)
-        self.send_html('upload_success.html')
+        self.send_html('upload_success.html', headers={'Location':
+                    f'http://localhost/{IMAGESTORE_PATH}/{image_id}{file_ext}'})
 
 
-    def send_html(self, file_path, code=200):
+    def send_html(self, file_path, code=200, headers = None):
         """
         Sends an HTML file as a response to the client.
 
@@ -97,31 +94,20 @@ class ImageHostingHTTPRequestHandler(BaseHTTPRequestHandler):
         """
         self.send_response(code)
         self.send_header('Content-type', 'text/html')
+        if headers:
+            for header, value in headers.items():
+                self.send_header(header, value)
         self.end_headers()
         with open(STATIC_PATH + file_path, 'rb') as file:
             self.wfile.write(file.read())
 
-        # handles all GET requests
     def do_GET(self):
-        """
-        Handles all HTTP GET requests.
-
-        Routes the request path to the appropriate handler function,
-        or returns a 404 response if the path is undefined.
-        """
         logger.info(f'GET {self.path}')
-        self.get_routes.get(self.path, self.default)()
+        self.get_routes.get(self.path, self.default_response)()
 
     def do_POST(self):
-        """
-        Handles all HTTP POST requests.
-
-        Routes the request path to the appropriate handler function,
-        or returns a 404 response if the path is undefined.
-        """
-
         logger.info(f'POST {self.path}')
-        self.post_routes.get(self.path, self.default)()
+        self.post_routes.get(self.path, self.default_response)()
 
 
 # noinspection PyTypeChecker
