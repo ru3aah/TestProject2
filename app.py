@@ -37,8 +37,7 @@ class ImageHostingHTTPRequestHandler(BaseHTTPRequestHandler):
         server: The server instance handling the request.
         """
         self.get_routes = {
-            '/api/images': self.get_images,
-            '/upload': self.get_upload
+            '/api/images': self.get_images
         }
         self.post_routes = {
             '/upload': self.post_upload,
@@ -61,15 +60,6 @@ class ImageHostingHTTPRequestHandler(BaseHTTPRequestHandler):
             'images': next(os.walk(IMAGESTORE_PATH))[2]
         }
         self.wfile.write(json.dumps(response).encode('utf-8'))
-
-
-    def get_upload(self):
-        """
-        Handles the GET request for the upload page.
-
-        Responds with the upload.html file to allow users to upload images.
-        """
-        self.send_html('upload.html', code =200)
 
 
     def post_upload(self):
