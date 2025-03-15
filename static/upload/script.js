@@ -49,9 +49,7 @@ function handleFiles(files) {
 
   dropArea.classList.remove('error');
 
-
 }
-
 
 copyButton.addEventListener('click', () => {
   navigator.clipboard.writeText(uploadUrlInput.value)
@@ -70,7 +68,7 @@ copyButton.addEventListener('click', () => {
 
 fileInput.addEventListener('change', () => {
   const file = fileInput.files[0];
-  if (!file) return alert('Pick up a file to upload');
+  if (!file) return alert('Pick up file to upload.');
 
   fetch('/api/upload/', {
     method: 'POST',
