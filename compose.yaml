@@ -21,7 +21,7 @@ services:
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
       - ./static:/usr/share/nginx/html
-      - ./images:/usr/share/nginx/images
+      - ./images:/images
       - ./logs:/var/log/nginx
     networks:
       - app_network
