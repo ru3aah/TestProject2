@@ -4,127 +4,130 @@ const browseButton = document.getElementById('browseButton');
 const uploadUrlInput = document.getElementById('uploadUrl');
 const copyButton = document.getElementById('copyButton');
 
+// Popup notification function for messaging
+function showPopupNotification(message, type) {
+    const notification = document.createElement('div');
+    notification.className = `popup-notification ${type}`;
+    notification.textContent = message;
+    document.body.appendChild(notification);
+
+    setTimeout(() => {
+        document.body.removeChild(notification);
+    }, 3000); // The popup disappears after 3 seconds
+}
+
+// Validate file type and size
+function validateFile(file) {
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/jpg'];
+    const maxSize = 5 * 1024 * 1024; // 5MB
+
+    if (!allowedTypes.includes(file.type)) {
+        showPopupNotification('Unsupported file type. Only JPG, PNG, and GIF are allowed.', 'error');
+        return 'type';
+    }
+
+    if (file.size > maxSize) {
+        showPopupNotification('File size exceeds 5MB!', 'error');
+        return 'size';
+    }
+
+    return 'valid';
+}
+
+// Handle dropped or selected files
+function handleFiles(files) {
+    const file = files[0];
+    if (!file) return;
+
+    const validationResult = validateFile(file);
+
+    if (validationResult === 'type' || validationResult === 'size') {
+        dropArea.classList.add('error');
+        dropArea.classList.remove('success');
+        return;
+    }
+
+    dropArea.classList.remove('error');
+    dropArea.classList.add('success');
+
+    // file upload
+    uploadFile(file);
+}
+
+// file upload via API with error handling
+async function uploadFile(file) {
+    try {
+        const response = await fetch('/api/upload/', {
+            method: 'POST',
+            headers: {
+                'Filename': file.name
+            },
+            body: file
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to upload file.');
+        }
+
+        const uploadUrl = response.headers.get('Location');
+        uploadUrlInput.value = uploadUrl;
+
+        copyButton.disabled = false;
+
+        showPopupNotification('File uploaded successfully!', 'success');
+    } catch (error) {
+        console.error('Upload error:', error);
+        dropArea.classList.remove('success');
+        dropArea.classList.add('error');
+        showPopupNotification('Error uploading file. Please try again.', 'error');
+    }
+}
+
+// Add Drag-and-Drop functionality
 browseButton.addEventListener('click', () => {
-  fileInput.click();
+    fileInput.click();
 });
 
-// Handle drag-enter and drag-leave for visual feedback
+fileInput.addEventListener('change', () => {
+    handleFiles(fileInput.files);
+});
+
 dropArea.addEventListener('dragover', (e) => {
-  e.preventDefault();
-  dropArea.classList.add('dragover');
+    e.preventDefault();
+    dropArea.classList.add('dragover');
 });
 
 dropArea.addEventListener('dragleave', () => {
-  dropArea.classList.remove('dragover');
+    dropArea.classList.remove('dragover');
 });
 
-// Handle the drop event
 dropArea.addEventListener('drop', (e) => {
-  e.preventDefault();
-  dropArea.classList.remove('dragover');
-  const files = e.dataTransfer.files;
-  if (files.length) {
-    handleFiles(files);
-  }
+    e.preventDefault();
+    dropArea.classList.remove('dragover');
+    const files = e.dataTransfer.files;
+    if (files.length) {
+        handleFiles(files);
+    }
 });
 
-// When file input changes (file selection)
-fileInput.addEventListener('change', () => {
-  handleFiles(fileInput.files);
-});
-
-// Main function to handle files
-function handleFiles(files) {
-  const file = files[0];
-  if (!file) return;
-
-  // Validate file type
-  if (!['image/jpeg', 'image/png', 'image/gif', 'image/jpg'].includes(file.type)) {
-    showFeedback('Invalid file type. Please upload a valid image file.', 'error');
-    return;
-  }
-
-  // Validate file size (limit: 5 MB)
-  if (file.size > 5 * 1024 * 1024) {
-    showFeedback('File size exceeds 5MB limit. Please upload a smaller image.', 'error');
-    return;
-  }
-
-  // Clear all errors and upload file
-  uploadFile(file);
-}
-
-// Function to upload file
-function uploadFile(file) {
-  fetch('/api/upload/', {
-    method: 'POST',
-    headers: {
-      'Filename': file.name
-    },
-    body: file,
-  })
-    .then(response => {
-      if (!response.ok) {
-        showFeedback('Failed to upload file. Please try again.', 'error');
-        throw new Error('Upload failed');
-      }
-
-      // Extract the upload location URL from response
-      const uploadUrl = response.headers.get('Location');
-      if (uploadUrl) {
-        uploadUrlInput.value = uploadUrl;
-        copyButton.disabled = false;
-        showFeedback('File uploaded successfully!', 'success');
-      } else {
-        throw new Error('No URL returned in response.');
-      }
-    })
-    .catch(error => {
-      console.error('Upload error:', error);
-      showFeedback('An error occurred during the upload. Please try again.', 'error');
-    });
-}
-
-// Function to display feedback (success or error)
-function showFeedback(message, type) {
-  dropArea.classList.remove('error', 'success');
-
-  if (type === 'error') {
-    dropArea.classList.add('error');
-  } else if (type === 'success') {
-    dropArea.classList.add('success');
-  }
-
-  const feedbackElement = document.getElementById('feedback');
-  feedbackElement.textContent = message;
-  feedbackElement.className = type;
-
-  // Clear feedback after 3 seconds
-  setTimeout(() => {
-    feedbackElement.textContent = '';
-    feedbackElement.className = '';
-  }, 3000);
-}
-
-// Copy button functionality
+// Copying upload URL to clipboard
 copyButton.addEventListener('click', () => {
-  navigator.clipboard
-    .writeText(uploadUrlInput.value)
-    .then(() => {
-      copyButton.textContent = 'Copied!';
-      copyButton.style.backgroundColor = '#7B7B7B';
-      setTimeout(() => {
-        copyButton.innerHTML =
-          '<img src="copy.png" alt="Copy" width="20" height="20">';
-        copyButton.style.backgroundColor = '#007BFF';
-      }, 1000);
-    })
-    .catch(err => {
-      console.error('Failed to copy:', err);
-    });
+    navigator.clipboard.writeText(uploadUrlInput.value)
+            .then(() => {
+                copyButton.textContent = 'Copied!';
+                copyButton.style.backgroundColor = '#7B7B7B';
+                setTimeout(() => {
+                    copyButton.innerHTML = '<img src="copy.png" alt="Copy" width="20" height="20">';
+                    copyButton.style.backgroundColor = '#007BFF';
+                }, 1000);
+            })
+            .catch((err) => {
+                console.error('Failed to copy:', err);
+                showPopupNotification('Failed to copy upload URL.', 'error');
+            });
 });
 
-// Redirect button functionality
-document.getElementById('btnGoToImages').addEventListener('click', () => {
-  window.location.href = '/images/';
+//Go to images list button
+document.getElementById('btnGoToImages').addEventListener('click', (event) => {
+    window.location.href = '/images/';
 });
