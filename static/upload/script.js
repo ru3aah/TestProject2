@@ -119,6 +119,7 @@ copyButton.addEventListener('click', () => {
                 setTimeout(() => {
                     copyButton.innerHTML = '<img src="copy.png" alt="Copy" width="20" height="20">';
                     copyButton.style.backgroundColor = '#007BFF';
+                    uploadUrlInput.value = '';
                 }, 1000);
             })
             .catch((err) => {
