@@ -59,26 +59,32 @@ function deleteImage(image, tableRow) {
 
                 // Remove the table row after successful deletion
                 tableRow.remove();
-                showPopupNotification('Image deleted successfully.', 'success');
+                showPopupNotification('Image deleted successfully.',
+                                 'success');
             })
             .catch(err => {
                 console.error('Deletion error:', err);
-                showPopupNotification('Failed to delete image. Please try again.', 'error');
+                showPopupNotification('Failed to delete image. ' +
+                                       'Please try again.', 'error');
             });
 }
 
 // Show confirmation dialog
 function showConfirmationDialog(message) {
     return new Promise(resolve => {
+        // Create backdrop
         const dialogBackdrop = document.createElement('div');
         dialogBackdrop.className = 'dialog-backdrop';
 
+        // Create dialog box
         const dialogBox = document.createElement('div');
         dialogBox.className = 'dialog-box';
 
+        // Add message
         const dialogMessage = document.createElement('p');
         dialogMessage.textContent = message;
 
+        // Add confirm button
         const btnConfirm = document.createElement('button');
         btnConfirm.textContent = 'Yes';
         btnConfirm.className = 'dialog-btn confirm';
@@ -87,6 +93,7 @@ function showConfirmationDialog(message) {
             cleanupDialog();
         });
 
+        // Add cancel button
         const btnCancel = document.createElement('button');
         btnCancel.textContent = 'No';
         btnCancel.className = 'dialog-btn cancel';
@@ -95,13 +102,16 @@ function showConfirmationDialog(message) {
             cleanupDialog();
         });
 
+        // Append elements to the dialog box
         dialogBox.appendChild(dialogMessage);
         dialogBox.appendChild(btnConfirm);
         dialogBox.appendChild(btnCancel);
 
+        // Append dialog box to backdrop and then to the document
         dialogBackdrop.appendChild(dialogBox);
         document.body.appendChild(dialogBackdrop);
 
+        // Cleanup function to remove the dialog
         function cleanupDialog() {
             document.body.removeChild(dialogBackdrop);
         }
@@ -121,6 +131,7 @@ function showPopupNotification(message, type) {
     }, 3000); // Fades out after 3 seconds
 }
 
+// Redirect to upload page
 document.getElementById('btnGoToUpload').addEventListener('click', () => {
     window.location.href = '/upload/';
 });
