@@ -15,7 +15,7 @@ function setImages(images) {
         deleteButton.textContent = 'X';
         tdDelete.appendChild(deleteButton);
         tdPreview.innerHTML = `<img src="/images/${image}"  width="43"
-        height="43">`;
+        height="100%">`;
         tdUrl.innerHTML = `<a href="/images/${image}" target="_blank">${image}</a>`;
 
         tr.appendChild(tdPreview);
