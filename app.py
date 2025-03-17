@@ -2,6 +2,7 @@
 Image Hosting Server Emulation for local host on 8000
 2nd Project for Python full stack course at JetBrainAcademy
 """
+
 import json
 import os
 from http.server import HTTPServer, BaseHTTPRequestHandler
@@ -96,6 +97,8 @@ class ImageHostingHttpRequestHandler(BaseHTTPRequestHandler):
         self.send_html('upload_success.html',
                        headers={'Location': f'http://localhost/'
                                             f'{IMAGES_PATH}/{image_id}{ext}'})
+
+
 
 
     def send_html(self, file_path, code=200, headers=None):

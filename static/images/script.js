@@ -50,7 +50,10 @@ function confirmAndDeleteImage(image, tableRow) {
 // Perform API request to delete the image
 function deleteImage(image, tableRow) {
     fetch(`/api/images/${image}`, {
-        method: 'DELETE'
+        method: 'DELETE',
+        headers:{
+            'File name':image
+        },
     })
             .then(response => {
                 if (!response.ok) {
@@ -60,12 +63,12 @@ function deleteImage(image, tableRow) {
                 // Remove the table row after successful deletion
                 tableRow.remove();
                 showPopupNotification('Image deleted successfully.',
-                                 'success');
+                        'success');
             })
             .catch(err => {
                 console.error('Deletion error:', err);
                 showPopupNotification('Failed to delete image. ' +
-                                       'Please try again.', 'error');
+                        'Please try again.', 'error');
             });
 }
 
