@@ -28,7 +28,8 @@ class ImageHostingHttpRequestHandler(BaseHTTPRequestHandler):
     A custom HTTP request handler for an image hosting server.
 
     This handler serves routes for uploading images and retrieving the list
-    of uploaded images. It supports GET and POST methods, handles large file uploads,
+    of uploaded images. It supports GET and POST methods, handles large file
+    uploads,
     and enforces file type restrictions.
     """
     server_version = 'Image Hosting Server v0.1'
@@ -56,9 +57,6 @@ class ImageHostingHttpRequestHandler(BaseHTTPRequestHandler):
     def get_images(self):
         """
         Handle GET requests for retrieving the list of uploaded images.
-
-        Sends a JSON response containing the filenames of images located in
-        the 'images/' directory.
         """
 
         self.send_response(200)
@@ -75,9 +73,6 @@ class ImageHostingHttpRequestHandler(BaseHTTPRequestHandler):
         Validates the file size and type before saving it to the server.
         Logs warnings for invalid files. Responds with success or failure pages.
 
-        - If valid: The image is saved using a UUID and the client is redirected.
-        - If invalid: Returns appropriate HTTP error statuses (413 for size limit,
-          400 for invalid file types).
         """
 
         length = int(self.headers.get('Content-Length'))
@@ -99,11 +94,9 @@ class ImageHostingHttpRequestHandler(BaseHTTPRequestHandler):
                                             f'{IMAGES_PATH}/{image_id}{ext}'})
 
 
-
-
     def send_html(self, file_path, code=200, headers=None):
         """
-        Sends an HTML response using a static file.
+        Sends an HTML response using a static f ile.
 
         Parameters:
             file_path (str): Path to the HTML file to be sent.
@@ -125,7 +118,8 @@ class ImageHostingHttpRequestHandler(BaseHTTPRequestHandler):
         """
         Handle incoming GET requests by routing them to the appropriate handler.
 
-        Logs the request and executes the route handler based on the requested path.
+        Logs the request and executes the route handler based on the
+        requested path.
         If the route is not found, serves a 404 page.
         """
 
@@ -137,11 +131,45 @@ class ImageHostingHttpRequestHandler(BaseHTTPRequestHandler):
         """
         Handle incoming POST requests by routing them to the appropriate handler.
 
-        Logs the request and executes the route handler based on the requested path.
+        Logs the request and executes the route handler based on the
+        requested path.
         If the route is not found, serves a 404 page.
         """
         logger.info(f'POST {self.path}')
         self.post_routes.get(self.path, self.default_response)()
+
+
+    def do_DELETE(self):
+        """
+        Handle incoming DELETE requests by routing them to the appropriate
+        handler.
+        """
+        logger.info(f'DELETE {self.path}')
+        if self.path.startswith('/api/delete'):
+            image_id = self.path.split('/')[-1]
+            delete_path = os.path.join(IMAGES_PATH, image_id)
+            if os.path.exists(delete_path):
+                try:
+                    os.remove(delete_path)
+                    logger.info(f'Image deleted: {delete_path}')
+                    self.send_response(200)
+                    self.end_headers()
+                    self.wfile.write(b'{"message": "Image deleted successfully."}')
+
+                except Exception as e:
+                    logger.error(f'Error deleting image: {e}')
+                    self.send_response(500)
+                    self.end_headers()
+                    self.wfile.write(
+                        f'{{"error": "Failed to delete image: {str(e)}"}}'.encode(
+                            'utf-8'))
+            else:
+                logger.warning(f'Image not found: {delete_path}')
+                self.send_response(404)
+                self.end_headers()
+                self.wfile.write(b'{"error": "Image not found."}')
+                self.send_html('404.html', code=404)
+
 
 
 def run(server_class=HTTPServer, handler_class=ImageHostingHttpRequestHandler):

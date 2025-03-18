@@ -49,17 +49,13 @@ function confirmAndDeleteImage(image, tableRow) {
 
 // Perform API request to delete the image
 function deleteImage(image, tableRow) {
-    fetch(`/api/images/${image}`, {
-        method: 'DELETE',
-        headers:{
-            'File name':image
-        },
+    fetch(`/api/delete/${image}`, {
+        method: 'DELETE'
     })
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Failed to delete image.');
                 }
-
                 // Remove the table row after successful deletion
                 tableRow.remove();
                 showPopupNotification('Image deleted successfully.',
