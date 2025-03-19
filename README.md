@@ -31,6 +31,8 @@
    python app.py
    ```
 
+Возможен запуск через docker командой docker compose up --build
+
 ## API Эндпоинты
 
 - `GET /images` — Возвращает список всех доступных изображений.
