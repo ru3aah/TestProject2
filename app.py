@@ -26,12 +26,8 @@ logger.add(LOG_PATH + LOG_FILE,
 class ImageHostingHttpRequestHandler(BaseHTTPRequestHandler):
     """
     A custom HTTP request handler for an image hosting server.
-
-    This handler serves routes for uploading images and retrieving the list
-    of uploaded images. It supports GET and POST methods, handles large file
-    uploads,
-    and enforces file type restrictions.
     """
+
     server_version = 'Image Hosting Server v0.1'
 
     def __init__(self, request, client_address, server):
@@ -50,7 +46,8 @@ class ImageHostingHttpRequestHandler(BaseHTTPRequestHandler):
 
         self.get_routes = {'/api/images': self.get_images}
         self.post_routes = {'/upload/': self.post_upload}
-        self.default_response = lambda: self.send_html('404.html', 404)
+        self.default_response = lambda: self.send_html('404.html',
+                                                       404)
         super().__init__(request, client_address, server)
 
 
@@ -71,8 +68,6 @@ class ImageHostingHttpRequestHandler(BaseHTTPRequestHandler):
         Handle POST requests for uploading images.
 
         Validates the file size and type before saving it to the server.
-        Logs warnings for invalid files. Responds with success or failure pages.
-
         """
 
         length = int(self.headers.get('Content-Length'))
@@ -118,9 +113,6 @@ class ImageHostingHttpRequestHandler(BaseHTTPRequestHandler):
         """
         Handle incoming GET requests by routing them to the appropriate handler.
 
-        Logs the request and executes the route handler based on the
-        requested path.
-        If the route is not found, serves a 404 page.
         """
 
         logger.info(f'GET {self.path}')
@@ -130,20 +122,17 @@ class ImageHostingHttpRequestHandler(BaseHTTPRequestHandler):
     def do_POST(self):
         """
         Handle incoming POST requests by routing them to the appropriate handler.
-
-        Logs the request and executes the route handler based on the
-        requested path.
-        If the route is not found, serves a 404 page.
         """
+
         logger.info(f'POST {self.path}')
         self.post_routes.get(self.path, self.default_response)()
 
 
     def do_DELETE(self):
         """
-        Handle incoming DELETE requests by routing them to the appropriate
-        handler.
+        Handles incoming DELETE requests
         """
+
         logger.info(f'DELETE {self.path}')
         if self.path.startswith('/api/delete'):
             image_id = self.path.split('/')[-1]
@@ -154,15 +143,16 @@ class ImageHostingHttpRequestHandler(BaseHTTPRequestHandler):
                     logger.info(f'Image deleted: {delete_path}')
                     self.send_response(200)
                     self.end_headers()
-                    self.wfile.write(b'{"message": "Image deleted successfully."}')
+                    self.wfile.write(b'{"message": "Image deleted '
+                                     b'successfully."}')
 
                 except Exception as e:
                     logger.error(f'Error deleting image: {e}')
                     self.send_response(500)
                     self.end_headers()
                     self.wfile.write(
-                        f'{{"error": "Failed to delete image: {str(e)}"}}'.encode(
-                            'utf-8'))
+                        f'{{"error": "Failed to delete image: '
+                        f'{str(e)}"}}'.encode('utf-8'))
             else:
                 logger.warning(f'Image not found: {delete_path}')
                 self.send_response(404)
@@ -179,10 +169,8 @@ def run(server_class=HTTPServer, handler_class=ImageHostingHttpRequestHandler):
     Parameters:
         server_class (type): HTTP server class to be instantiated.
         handler_class (type): Request handler class to handle incoming requests.
-
-    The server listens on the address defined in SERVER_ADDRESS and handles
-    incoming requests until interrupted.
     """
+
     httpd = server_class(SERVER_ADDRESS, handler_class)
     logger.info(f'Serving on http://{SERVER_ADDRESS[0]}:{SERVER_ADDRESS[1]}')
     try:
