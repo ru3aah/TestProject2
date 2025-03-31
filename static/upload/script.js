@@ -22,8 +22,8 @@ function validateFile(file) {
     const maxSize = 5 * 1024 * 1024; // 5MB
 
     if (!allowedTypes.includes(file.type)) {
-        showPopupNotification('Unsupported file type. Only JPG, PNG, and GIF are
-         allowed.', 'error');
+        showPopupNotification(
+        'Unsupported file type. Only JPG, PNG, and GIF are allowed.', 'error');
         return 'type';
     }
 
@@ -119,8 +119,8 @@ copyButton.addEventListener('click', () => {
                 copyButton.textContent = 'Copied!';
                 copyButton.style.backgroundColor = '#7B7B7B';
                 setTimeout(() => {
-                    copyButton.innerHTML = '<img src="copy.png" alt="Copy"
-                    width="20" height="20">';
+                    copyButton.innerHTML = '<img src="copy.png" alt="Copy"' +
+                            ' width="20" height="20">';
                     copyButton.style.backgroundColor = '#007BFF';
                     uploadUrlInput.value = '';
                 }, 1000);

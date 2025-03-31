@@ -45,7 +45,7 @@ class ImageHostingHttpRequestHandler(BaseHTTPRequestHandler):
         """
 
         self.get_routes = {'/api/images': self.get_images}
-        self.post_routes = {'/upload/': self.post_upload}
+        self.post_routes = {'/upload': self.post_upload}
         self.default_response = lambda: self.send_html('404.html',
                                                        404)
         super().__init__(request, client_address, server)
