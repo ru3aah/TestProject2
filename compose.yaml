@@ -10,6 +10,9 @@ services:
       - ./logs:/app/logs
     networks:
       - app_network
+      - db_network
+    depends_on:
+      - db
 
   nginx:
     image: nginx
@@ -28,8 +31,26 @@ services:
     depends_on:
       - app
 
+  db:
+    image: postgres:17-alpine
+    container_name: db
+    environment:
+      POSTGRES_DB: images_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - db_network
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
 networks:
   app_network:
+  db_network:
+
+volumes:
+  db_data:
 
 
 

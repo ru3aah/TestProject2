@@ -181,6 +181,8 @@ def run(server_class=HTTPServer, handler_class=ImageHostingHttpRequestHandler):
     finally:
         logger.info('Server stopped.')
 
+def init_table():
+    pass
 
 if __name__ == '__main__':
     run()
