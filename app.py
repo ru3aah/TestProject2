@@ -10,13 +10,8 @@ from uuid import uuid4
 
 from loguru import logger
 
-SERVER_ADDRESS = ('0.0.0.0', 8000)
-STATIC_PATH = 'static/'
-IMAGES_PATH = 'images/'
-ALLOWED_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.gif']
-MAX_FILE_SIZE = 5 * 1024 * 1024
-LOG_PATH = 'logs/'
-LOG_FILE = 'app.log'
+from Settings import LOG_PATH, LOG_FILE, IMAGES_PATH, MAX_FILE_SIZE, \
+    ALLOWED_EXTENSIONS, STATIC_PATH, SERVER_ADDRESS
 
 logger.add(LOG_PATH + LOG_FILE,
            format='[{time:YY-MM-DD HH:mm:ss}] {level}: {message}',
