@@ -20,7 +20,7 @@ from uuid import uuid4
 
 from loguru import logger
 
-from DBManager import DBManager
+from DB_Manager import DBManager
 from adv_http_request_handler import AdvancedHttpRequestHandler
 from settings import IMAGES_PATH, MAX_FILE_SIZE, \
     ALLOWED_EXTENSIONS, PAGE_LIMIT, ERROR_FILE
@@ -87,7 +87,6 @@ class ImageHostingHttpRequestHandler(AdvancedHttpRequestHandler):
             })
         self.send_json({
             'images': to_json_images
-            # next(os.walk(IMAGES_PATH))[2]
         })
 
 

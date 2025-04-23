@@ -1,12 +1,12 @@
 from typing import Optional
 
 import psycopg
-from app.singleton import SingletonMeta
 from dotenv import load_dotenv
 from loguru import logger
 from psycopg import connect
 
 from settings import DB_NAME, DB_USER, DB_PASSWORD, DB_HOST, DB_PORT
+from singleton import SingletonMeta
 
 
 class DBManager(metaclass=SingletonMeta):
@@ -23,7 +23,9 @@ class DBManager(metaclass=SingletonMeta):
         self.conn = self.connect()
 
     def set_conn_str(self) -> None:
-        self.conn_str = f"dbname={self.db_name} user={self.db_user} password={self.db_password} host={self.db_host} port={self.db_port}"
+        self.conn_str = (f"dbname={self.db_name} user={self.db_user} "
+                         f"password={self.db_password} host={self.db_host} "
+                         f"port={self.db_port}")
         logger.info(f'Setting connection string {self.conn_str}')
 
     def connect(self) -> psycopg.Connection:

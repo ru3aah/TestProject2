@@ -7,19 +7,13 @@ from http.server import HTTPServer
 
 from loguru import logger
 
+from DB_Manager import DBManager
 from Image_Hosting_Handler import ImageHostingHttpRequestHandler
 from settings import SERVER_ADDRESS
 
 
-def run(server_class=HTTPServer,
-        handler_class=ImageHostingHttpRequestHandler):
-    """
-    Start the HTTP server with the specified handler class.
-    Parameters:
-        server_class (type): HTTP server class to be instantiated.
-        handler_class (type): Request handler class to handle incoming requests.
-    """
-
+def run(server_class=HTTPServer, handler_class=ImageHostingHttpRequestHandler):
+    DBManager().init_tables()
     httpd = server_class(SERVER_ADDRESS, handler_class)
     logger.info(f'Serving on http://{SERVER_ADDRESS[0]}:{SERVER_ADDRESS[1]}')
     try:

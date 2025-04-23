@@ -3,11 +3,11 @@ LABEL authors="papanda"
 
 WORKDIR /app
 
-COPY requirements.txt .
+COPY app/requirements.txt .
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY app.py .
+COPY app/app.py .
 
 EXPOSE 8000
 
