@@ -56,7 +56,10 @@ class DBManager(metaclass=SingletonMeta):
             logger.error(f'Database error: {e}')
 
     def init_tables(self):
-        self.execute_query(open('init_tables.sql', 'r').read())
+        logger.info('Initializing tables...')
+        with open('init_tables.sql', 'r') as file:
+            sql = file.read()
+        self.execute_query(sql)
 
     def close(self):
         self.conn.close()
