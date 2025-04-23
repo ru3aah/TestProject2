@@ -1,6 +1,6 @@
 services:
   app:
-    build: .
+    build: ..
     container_name: app
     ports:
       - "8000:8000"
@@ -30,16 +30,11 @@ services:
       - app_network
     depends_on:
       - app
-
   db:
     image: postgres:17-alpine
     container_name: db
-    environment:
-      POSTGRES_DB: images_db
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-    ports:
-      - "5432:5432"
+    env_file:
+      - ../.env
     networks:
       - db_network
     volumes:
