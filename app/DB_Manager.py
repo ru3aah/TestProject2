@@ -33,7 +33,7 @@ class DBManager(metaclass=SingletonMeta):
             self.conn = connect(self.conn_str)
             return self.conn
         except psycopg.Error as e:
-            logger.error(f'Database error: {e}')
+            logger.error(f'Database connect error: {e}')
 
     def execute_query(self, query: str) -> None:
         try:
@@ -42,7 +42,7 @@ class DBManager(metaclass=SingletonMeta):
                     cursor.execute(query)
                     conn.commit()
         except psycopg.Error as e:
-            logger.error(f'Database error: {e}')
+            logger.error(f'Database query error: {e}')
 
     def execute_fetch_query(self, query: str, n: int = None) -> Optional[list]:
         try:
@@ -53,13 +53,16 @@ class DBManager(metaclass=SingletonMeta):
                         return cursor.fetchall()
                     return cursor.fetchmany(n)
         except psycopg.Error as e:
-            logger.error(f'Database error: {e}')
+            logger.error(f'Database fetch error: {e}')
 
     def init_tables(self):
         logger.info('Initializing tables...')
-        with open('init_tables.sql', 'r') as file:
-            sql = file.read()
-        self.execute_query(sql)
+        try:
+            with open('init_tables.sql', 'r') as file:
+                sql = file.read()
+            self.execute_query(sql)
+        except psycopg.Error as e:
+            logger.error(f'tables init error: {e}')
 
     def close(self):
         self.conn.close()
