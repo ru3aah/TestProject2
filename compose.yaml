@@ -9,7 +9,7 @@ services:
       - ./images:/app/images
       - ./logs:/app/logs
     networks:
-      - app_network
+      - front_network
       - db_network
     depends_on:
       - db
@@ -27,7 +27,7 @@ services:
       - ./images:/images
       - ./logs:/var/log/nginx
     networks:
-      - app_network
+      - front_network
     depends_on:
       - app
   db:
@@ -41,7 +41,7 @@ services:
       - db_data:/var/lib/postgresql/data
 
 networks:
-  app_network:
+  front_network:
   db_network:
 
 volumes:

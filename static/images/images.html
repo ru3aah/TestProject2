@@ -4,17 +4,24 @@
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Image Hosting</title>
-    <link rel="stylesheet" href="styles.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="styles.css">
+
 </head>
 <body>
 
 <header class="main-header">
-    <h1>Upload Images</h1>
-    <p>Upload selfies, mems, or any fun pictures here.</p>
+    <h1>Upload Photos</h1>
+    <p>Upload selfies, memes, or any fun pictures here.</p>
     <div>
         <button id="btnGoToUpload" class="hero-button">Upload</button>
     </div>
 </header>
+
+<nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center" id="pagination">
+    </ul>
+</nav>
 
 <main>
     <section id="images" class="tab-content active">
@@ -22,7 +29,11 @@
             <thead>
             <tr>
                 <th>Preview</th>
-                <th>Url</th>
+                <th>Name</th>
+                <th>Original Name</th>
+                <th>Size</th>
+                <th>Date</th>
+                <th>Type</th>
                 <th>Delete</th>
             </tr>
             </thead>
@@ -32,7 +43,7 @@
         </table>
     </section>
 </main>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 <script src="script.js"></script>
 </body>
 </html>
