@@ -29,20 +29,6 @@ from settings import IMAGES_PATH, MAX_FILE_SIZE, \
 class ImageHostingHttpRequestHandler(AdvancedHttpRequestHandler):
     server_version = 'Image Hosting Server v1.0'
 
-    def __init__(self, request, client_address, server):
-
-        self.get_routes = {
-            '/api/images/': self.get_images,
-            '/api/images_count/': self.get_images_count
-        }
-        self.post_routes = {
-            '/upload/': self.post_upload
-        }
-        self.delete_routes = {
-            '/api/delete/': self.delete_image
-        }
-        super().__init__(request, client_address, server)
-
     def get_images_count(self) -> None:
         count = DBManager().execute_fetch_query('SELECT COUNT(*) FROM '
                                                 'images;')[0][0]
@@ -72,13 +58,12 @@ class ImageHostingHttpRequestHandler(AdvancedHttpRequestHandler):
             })
         self.send_json({
             'images': to_json_images
-            # next(os.walk(IMAGES_PATH))[2]
         })
 
     def post_upload(self) -> None:
         length = int(self.headers.get('Content-Length'))
         if length > MAX_FILE_SIZE:
-            logger.warning('File too large')
+            logger.warning('File is too large')
             self.send_html(ERROR_FILE, 413)
             return
 
@@ -87,7 +72,7 @@ class ImageHostingHttpRequestHandler(AdvancedHttpRequestHandler):
         _, ext = os.path.splitext(orig_filename)
         image_id = uuid4()
         if ext not in ALLOWED_EXTENSIONS:
-            logger.warning('File type not allowed')
+            logger.warning('File type is not allowed')
             self.send_html(ERROR_FILE, 400)
             return
         DBManager().execute_query(
@@ -100,10 +85,10 @@ class ImageHostingHttpRequestHandler(AdvancedHttpRequestHandler):
         self.send_html('upload_success.html', headers={
             'Location': f'http://localhost/{IMAGES_PATH}{image_id}{ext}'})
 
-    def delete_image(self) -> None:
-        full_filename = self.headers.get('Filename')
+    def delete_image(self, image_id) -> None:
+        full_filename = image_id
         if not full_filename:
-            logger.warning('No filename provided')
+            logger.warning('No filename is provided')
             self.send_html(ERROR_FILE, 404)
             return
 
