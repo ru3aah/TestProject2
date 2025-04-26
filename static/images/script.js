@@ -20,8 +20,8 @@ fetch('/api/images_count/').then(response => response.json()).then(count => {
 
 const tbody = document.getElementById('imagesTableBody');
 fetch('/api/images/', { headers: {'Page': page } })
-        .then(response => response.json())
-        .then(images => setImages(images.images));
+.then(response => response.json())
+.then(images => setImages(images.images));
 
 function setImages(images) {
     const imagesContainer = document.createElement('div');
@@ -42,9 +42,9 @@ function setImages(images) {
         const deleteButton = document.createElement('button');
         deleteButton.onclick = () => {
             fetch(`/api/delete/${fullname}`, {method: 'DELETE'})
-                    .then(data => {
-                        location.reload();
-                    });
+            .then(data => {
+                location.reload();
+            });
         }
         deleteButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16"> <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/></svg>';
         deleteButton.classList.add('delete-btn');
