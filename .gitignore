@@ -1,5 +1,6 @@
 .idea
 .venv
+.env
 logs
 /images
 .venv1
@@ -79,4 +80,5 @@ coverage.xml
 *.cover
 .hypothesis/
 .editorconfig
+./backups/*
 

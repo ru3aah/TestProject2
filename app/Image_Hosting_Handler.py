@@ -21,12 +21,12 @@ from uuid import uuid4
 from loguru import logger
 
 from DB_Manager import DBManager
-from adv_http_request_handler import AdvancedHttpRequestHandler
+from adv_http_request_handler import AdvancedHTTPRequestHandler
 from settings import IMAGES_PATH, MAX_FILE_SIZE, \
     ALLOWED_EXTENSIONS, PAGE_LIMIT, ERROR_FILE
 
 
-class ImageHostingHttpRequestHandler(AdvancedHttpRequestHandler):
+class ImageHostingHttpRequestHandler(AdvancedHTTPRequestHandler):
     server_version = 'Image Hosting Server v1.0'
 
     def get_images_count(self) -> None:

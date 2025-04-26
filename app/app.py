@@ -9,6 +9,7 @@ from loguru import logger
 
 from DB_Manager import DBManager
 from Image_Hosting_Handler import ImageHostingHttpRequestHandler
+from Router import Router
 from settings import SERVER_ADDRESS
 
 
