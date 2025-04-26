@@ -1,3 +1,19 @@
+"""
+Settings module for the image hosting server.
+
+This module contains global settings for the server, such as the address to
+listen on, the paths to the static files and uploaded images, and the
+maximum allowed file size.
+
+Attributes:
+    SERVER_ADDRESS (tuple): The address to listen on.
+    STATIC_PATH (str): The path to the static files.
+    IMAGES_PATH (str): The path to the uploaded images.
+    ALLOWED_EXTENSIONS (list): The list of allowed file extensions.
+    MAX_FILE_SIZE (int): The maximum allowed file size in bytes.
+    LOG_PATH (str): The path to the log files.
+"""
+
 import os
 
 import dotenv

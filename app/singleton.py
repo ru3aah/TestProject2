@@ -1,10 +1,22 @@
+"""
+Provides a Singleton metaclass to implement the Singleton design pattern.
+"""
+
 class SingletonMeta(type):
     """
-    The Singleton class can be implemented in different ways in Python. Some
-    possible methods include: base class, decorator, metaclass. We will use the
-    metaclass because it is best suited for this purpose.
-    """
+    Metaclass for implementing the Singleton design pattern. This ensures that
+    a class using this metaclass can have only one instance and provides global
+    access to that instance.
 
+    This behavior is achieved by overriding the `__call__` method, which checks
+    if an instance of the class already exists. If an instance exists,
+    it returns the existing instance. Otherwise, it creates a new instance
+    and stores it in an internal dictionary.
+
+    :cvar _instances: Dictionary holding references to the single instances of
+        each class using this metaclass.
+    :type _instances: dict
+    """
     _instances = {}
 
     def __call__(cls, *args, **kwargs):

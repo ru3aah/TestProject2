@@ -27,6 +27,27 @@ from settings import IMAGES_PATH, MAX_FILE_SIZE, \
 
 
 class ImageHostingHttpRequestHandler(AdvancedHTTPRequestHandler):
+    """
+    Image Hosting HTTP Request Handler Class
+
+    This class is responsible for managing HTTP requests for an image hosting server. It provides methods for
+    retrieving, uploading, and deleting images, as well as maintaining specific request routes.
+
+    Subclasses the `AdvancedHTTPRequestHandler` class to provide additional features.
+
+    Attributes:
+        server_version (str): The name and version of the image hosting server.
+
+    Methods:
+        do_GET: Handles GET requests.
+        do_POST: Handles POST requests.
+        do_DELETE: Handles DELETE requests.
+        get_images_count: Retrieves the count of images in the database.
+        get_images: Retrieves images from the database.
+        post_upload: Uploads a new image to the database.
+        delete_image: Deletes an image by ID from the database.
+    """
+
     server_version = 'Image Hosting Server v1.0'
 
     def get_images_count(self) -> None:
