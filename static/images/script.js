@@ -7,6 +7,12 @@ if (page < 1) {
 fetch('/api/images_count/').then(response => response.json()).then(count => {
     let imagesCount = count.count;
     let pagesCount = Math.ceil(count.count / 10);
+
+    if (pagesCount === 0) {
+        document.getElementById('pagination').innerHTML = '<p>No images found.</p>';
+        return;
+        }
+
     if (page > pagesCount) {
         window.location.href = '/images/?page=' + pagesCount;
     }
