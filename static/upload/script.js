@@ -137,24 +137,42 @@ function uploadFile(file) {
                 return response.headers.get('Location');
             })
             .then(location => {
-                // Update the UI with the uploaded file's URL
+                // On success, show the success popup
+                showPopup('File uploaded successfully!', true);
+
+                // Update the UI with the uploaded file URL
                 uploadUrlInput.value = location;
                 copyButton.disabled = false;
-
-                // Provide success feedback
-                dropArea.classList.add('success');
             })
             .catch(error => {
-                console.error('Upload failed:', error);
+                console.error(error);
 
-                // Provide error feedback
-                dropArea.classList.add('error');
+                // On error, show the failure popup
+                showPopup('Upload failed. Please try again.', false);
             })
             .finally(() => {
-                isUploading = false; // Reset upload flag
+                // Reset uploading state
+                isUploading = false;
                 dropArea.classList.remove('uploading');
-                setTimeout(() => dropArea.classList.remove('success'), 2000);
             });
+}
+
+/**
+ * Display a popup notification
+ * @param {string} message - The message to display
+ * @param {boolean} isSuccess - Whether the message indicates success (green) or failure (red)
+ */
+function showPopup(message, isSuccess) {
+    const popup = document.getElementById('uploadResultPopup');
+    popup.textContent = message;
+    popup.classList.remove('hidden', 'success', 'error');
+    popup.classList.add('visible', isSuccess ? 'success' : 'error');
+
+    // Hide popup after 2 seconds
+    setTimeout(() => {
+        popup.classList.remove('visible');
+        popup.classList.add('hidden');
+    }, 2000);
 }
 
 // Event listener to copy URL to clipboard
