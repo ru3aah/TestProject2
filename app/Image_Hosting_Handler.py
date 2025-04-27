@@ -74,7 +74,7 @@ class ImageHostingHttpRequestHandler(AdvancedHTTPRequestHandler):
                 'filename': image[1],
                 'original_name': image[2],
                 'size': image[3],
-                'upload_time': image[4].strftime('%Y-%m-%d %H:%M:%s'),
+                'upload_time': image[4].strftime('%Y-%m-%d %H:%M:%S'),
                 'file_type': image[5]
             })
         self.send_json({

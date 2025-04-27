@@ -17,7 +17,7 @@ showGalleryButton.addEventListener('click', () => {
 
 // Add event listener to 'Browse Your File' button
 browseButton.addEventListener('click', () => {
-    fileInput.click(); // Open the file dialog
+    fileInput.click();
 });
 
 // Prevent default behavior for drag-and-drop events
@@ -31,10 +31,14 @@ function preventDefaults(event) {
 }
 
 // Highlight the upload area when a file is dragged over it
-dropArea.addEventListener('dragover', () => dropArea.classList.add('dragover'));
+dropArea.addEventListener('dragover',
+        () => {
+            dropArea.classList.add('dragover');
+        });
 
 // Remove the highlight when the drag leaves the upload area
-dropArea.addEventListener('dragleave', () => dropArea.classList.remove('dragover'));
+dropArea.addEventListener('dragleave',
+        () => dropArea.classList.remove('dragover'));
 
 // Handle dropping files into the upload area
 dropArea.addEventListener('drop', (event) => {
@@ -160,7 +164,7 @@ function uploadFile(file) {
 /**
  * Display a popup notification
  * @param {string} message - The message to display
- * @param {boolean} isSuccess - Whether the message indicates success (green) or failure (red)
+ * @param {boolean} isSuccess - Whether the notification is success or error
  */
 function showPopup(message, isSuccess) {
     const popup = document.getElementById('uploadResultPopup');

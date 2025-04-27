@@ -1,5 +1,5 @@
 #!/usr/bin/bash
-bu_date=$(date +%Y-%m-%d_%H%M%S)
+bu_date=$(date +%Y-%m-%d_%H:%M:%S)
 backup_dir="${BACKUP_DIR:=backups}"
 mkdir -p $backup_dir
 

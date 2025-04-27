@@ -4,12 +4,15 @@ if (page < 1) {
 }
 
 
-fetch('/api/images_count/').then(response => response.json()).then(count => {
+fetch('/api/images_count/').then(response => {
+    return response.json();
+}).then(count => {
     let imagesCount = count.count;
     let pagesCount = Math.ceil(count.count / 10);
 
     if (pagesCount === 0) {
-        document.getElementById('pagination').innerHTML = '<p>No images found.</p>';
+        document.getElementById('pagination').innerHTML =
+                '<p>No images found.</p>';
         return;
         }
 
@@ -45,6 +48,8 @@ function setImages(images) {
         const tdDelete = document.createElement('td');
 
 
+
+
         const deleteButton = document.createElement('button');
         deleteButton.onclick = () => {
             fetch(`/api/delete/${fullname}`, {method: 'DELETE'})
@@ -52,11 +57,20 @@ function setImages(images) {
                 location.reload();
             });
         }
-        deleteButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16"> <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/></svg>';
+        deleteButton.innerHTML =
+                '<svg xmlns="http://www.w3.org/2000/svg" ' +
+                'width="16" height="16" ' +
+                'fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16"> ' +
+                '<path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 ' +
+                '7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 ' +
+                '5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 ' +
+                '1-.708-.708L7.293 8z"/></svg>';
+
         deleteButton.classList.add('delete-btn');
         tdDelete.appendChild(deleteButton);
 
-        tdPreview.innerHTML = `<img src="/images/${fullname}" width="42" height="100%">`;
+        tdPreview.innerHTML = `<img src="/images/${fullname}" 
+                                width="42" height="100%">`;
 
         tdOrigName.innerHTML = image.original_name;
 
@@ -66,7 +80,8 @@ function setImages(images) {
 
         tdType.innerHTML = image.file_type;
 
-        tdName.innerHTML = `<a href="/images/${fullname}" target="_blank">${image.filename}</a>`;
+        tdName.innerHTML = `<a href="/images/${fullname}" 
+                              target="_blank">${image.filename}</a>`;
 
         tr.appendChild(tdPreview);
         tr.appendChild(tdName);
