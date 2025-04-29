@@ -19,7 +19,7 @@ class SingletonMeta(type):
     """
     _instances = {}
 
-    def __call__(cls, *args, **kwargs):
+    def __call__(cls, *args, **kwargs) -> None:
         """
         Possible changes to the value of the `__init__` argument do not affect
         the returned instance.

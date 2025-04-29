@@ -15,6 +15,7 @@ Classes:
 - DBManager:
 """
 from typing import Optional
+
 import psycopg
 from dotenv import load_dotenv
 from loguru import logger
@@ -125,7 +126,7 @@ class DBManager(metaclass=SingletonMeta):
         except psycopg.Error as e:
             logger.error(f'Database fetch error: {e}')
 
-    def init_tables(self):
+    def init_tables(self) -> None:
         """
         Initializes database tables by executing SQL commands read from a file.
 
@@ -144,7 +145,7 @@ class DBManager(metaclass=SingletonMeta):
         except psycopg.Error as e:
             logger.error(f'tables init error: {e}')
 
-    def close(self):
+    def close(self) -> None:
         """
         Closes the active database connection
 

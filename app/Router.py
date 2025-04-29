@@ -10,6 +10,7 @@ Dependencies:
 """
 
 import re
+
 from loguru import logger
 
 from singleton import SingletonMeta
@@ -40,7 +41,7 @@ class Router(metaclass=SingletonMeta):
         }
 
     @staticmethod
-    def convert_path(path):
+    def convert_path(path) -> str:
         """
         Converts a URL path containing placeholders to a
         regex-compatible pattern.
@@ -62,7 +63,7 @@ class Router(metaclass=SingletonMeta):
         """
         return re.sub(r'<(\w+)>', r'(?P<\1>[^/]+)', path)
 
-    def add_route(self, method, path, handler):
+    def add_route(self, method, path, handler) -> None:
         """
         Adds a new route to the routing table
         by compiling the given path pattern.

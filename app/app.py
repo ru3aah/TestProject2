@@ -13,7 +13,8 @@ from Router import Router
 from settings import SERVER_ADDRESS
 
 
-def run(server_class=HTTPServer, handler_class=ImageHostingHttpRequestHandler):
+def run(server_class=HTTPServer,
+        handler_class=ImageHostingHttpRequestHandler) -> None:
     """
     Initialize the image hosting server and start serving requests.
 

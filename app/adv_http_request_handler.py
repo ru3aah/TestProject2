@@ -31,12 +31,14 @@ class AdvancedHTTPRequestHandler(BaseHTTPRequestHandler):
                 and determine appropriate handlers.
     :type router: Router
     """
-    def __init__(self, request, client_address, server):
+    def __init__(self, request, client_address, server) -> None:
         self.default_response = lambda: self.send_html('404.html', 404)
         self.router = Router()
         super().__init__(request, client_address, server)
 
-    def send_html(self, file, code=200, headers=None, file_path=STATIC_PATH):
+    def send_html(self, file, code=200, headers=None, file_path=STATIC_PATH) \
+            -> None:
+
         """
         Sends an HTML file as an HTTP response to the client.
         The response includes a status code, headers, and the contents
@@ -65,7 +67,7 @@ class AdvancedHTTPRequestHandler(BaseHTTPRequestHandler):
         with open(file_path + file, 'rb') as file:
             self.wfile.write(file.read())
 
-    def send_json(self, response: dict, code=200, headers=None):
+    def send_json(self, response: dict, code=200, headers=None) -> None:
         """
         Send a JSON response to the client. This method sets the response code,
         adds the required headers, and writes the JSON-encoded response body
@@ -90,7 +92,7 @@ class AdvancedHTTPRequestHandler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(json.dumps(response).encode('utf-8'))
 
-    def do_request(self, method):
+    def do_request(self, method) -> None:
         """
         Executes an HTTP request by resolving the method and path
         against the router.
@@ -109,7 +111,7 @@ class AdvancedHTTPRequestHandler(BaseHTTPRequestHandler):
         else:
             self.default_response()
 
-    def do_GET(self):
+    def do_GET(self) -> None:
         """
         Handles HTTP GET requests by delegating the logic
         to a shared request handling function ``do_request`` function.
@@ -120,7 +122,7 @@ class AdvancedHTTPRequestHandler(BaseHTTPRequestHandler):
         """
         self.do_request('GET')
 
-    def do_POST(self):
+    def do_POST(self) -> None:
         """
         Handles HTTP POST requests by delegating the logic to the `do_request`
         function.
@@ -130,7 +132,7 @@ class AdvancedHTTPRequestHandler(BaseHTTPRequestHandler):
         """
         self.do_request('POST')
 
-    def do_DELETE(self):
+    def do_DELETE(self) -> None:
         """
         Handles HTTP DELETE requests
         by invoking a generic HTTP request handler for the DELETE method.
